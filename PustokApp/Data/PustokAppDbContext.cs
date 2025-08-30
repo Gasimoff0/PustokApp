@@ -7,6 +7,7 @@ namespace PustokApp.Data
     {
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(PustokAppDbContext).Assembly);
             base.OnModelCreating(modelBuilder);
         }
         public DbSet<Slider> Sliders { get; set; }
@@ -14,5 +15,8 @@ namespace PustokApp.Data
         public DbSet<Author> Authors { get; set; }
         public DbSet<Genre> Genres { get; set; }
         public DbSet<BookImage> BookImages { get; set; }
+        public DbSet<Tag> Tags { get; set; }
+        public DbSet<BookTag> BookTags { get; set; }
+        public DbSet<Setting> Settings { get; set; }
     }
 }

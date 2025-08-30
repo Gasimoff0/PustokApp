@@ -29,6 +29,7 @@ namespace PustokApp.Models
         public string MainImageUrl { get; set; }
         [Required]
         public string HoverImageUrl { get; set; }
+        public List<BookTag> BookTags { get; set; }
 
 
     }
