@@ -1,0 +1,34 @@
+﻿@model List<Genre>
+<div class="container">
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <h2>Genres</h2>
+        </div>
+        <div class="col-md-6 text-end">
+            <a asp-area="Manage" asp-controller="Genre" asp-action="Create" class="btn btn-lg btn-success">Create Genre</a>
+        </div>
+    <div class="row">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Handle</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var genre in Model)
+                {
+                    <tr>
+                        <td>@genre.Name</td>
+                        <td>
+                            <a asp-area="Manage" asp-controller="Genre" asp-action="Edit" asp-route-id="@genre.Id" class="btn btn-sm btn-info">Edit</a>
+                            <a asp-area="Manage" asp-controller="Genre" asp-action="Delete" asp-route-id="@genre.Id" class="btn btn-sm btn-danger">Delete</a>
+                            <a asp-area="Manage" asp-controller="Genre" asp-action="Detail" asp-route-id="@genre.Id" class="btn btn-sm btn-success">Detail</a>
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

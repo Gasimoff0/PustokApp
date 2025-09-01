@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using PustokApp.Services;
 
 namespace PustokApp
 {
@@ -15,7 +16,7 @@ namespace PustokApp
             builder.Services.AddDbContext<Data.PustokAppDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("default")));
 
-
+            builder.Services.AddScoped<LayoutService>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -34,8 +35,13 @@ namespace PustokApp
             app.UseAuthorization();
 
             app.MapControllerRoute(
+            name: "areas",
+            pattern: "{area:exists}/{controller=dashboard}/{action=Index}/{id?}"
+          );
+            app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
+
 
             app.Run();
         }
