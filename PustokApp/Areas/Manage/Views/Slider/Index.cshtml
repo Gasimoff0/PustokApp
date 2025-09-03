@@ -1,0 +1,77 @@
+@model List<Slider>
+<div class="container">
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <h2>Sliders</h2>
+        </div>
+        <div class="col-md-6 text-end">
+            <a asp-area="Manage" asp-controller="Slider" asp-action="Create" class="btn btn-lg btn-success">Create Slider</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Image</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Button Text</th>
+                        <th scope="col">Order</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var slider in Model)
+                    {
+                        <tr>
+                            <td>
+                                <img src="~/assets/image/bg-images/@slider.ImageUrl" alt="@slider.Title" class="img-thumbnail" style="width: 80px; height: 50px; object-fit: cover;" />
+                            </td>
+                            <td>
+                                <div>
+                                    <strong>@slider.Title</strong>
+                                </div>
+                            </td>
+                            <td>
+                                @{
+                                    string description = "";
+                                    if (string.IsNullOrEmpty(slider.Description))
+                                    {
+                                        description = "No description";
+                                    }
+                                    else if (slider.Description.Length > 50)
+                                    {
+                                        description = slider.Description.Substring(0, 50) + "...";
+                                    }
+                                    else
+                                    {
+                                        description = slider.Description;
+                                    }
+                                }
+                                @description
+                            </td>
+                            <td>@slider.ButtonText</td>
+                            <td>
+                                <span class="badge badge-primary">@slider.Order</span>
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group" aria-label="Slider actions">
+                                    <a asp-area="Manage" asp-controller="Slider" asp-action="Detail" asp-route-id="@slider.Id" class="btn btn-sm btn-success" title="View Details">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a asp-area="Manage" asp-controller="Slider" asp-action="Edit" asp-route-id="@slider.Id" class="btn btn-sm btn-info" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a asp-area="Manage" asp-controller="Slider" asp-action="Delete" asp-route-id="@slider.Id" class="btn btn-sm btn-danger" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

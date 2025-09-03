@@ -1,0 +1,98 @@
+@model Slider
+<!-- Content Row -->
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Slider Details Card -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h2 class="m-0 font-weight-bold text-primary">Slider Details</h2>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                        {
+                            <div class="form-group mb-3">
+                                <label class="form-label"><strong>Image:</strong></label>
+                                <div>
+                                    <img src="~/assets/image/bg-images/@Model.ImageUrl" alt="@Model.Title" class="img-thumbnail" style="max-width: 100%;" />
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label class="form-label"><strong>Slider ID:</strong></label>
+                            <p class="form-control-plaintext border p-2 bg-light">@Model.Id</p>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label class="form-label"><strong>Title:</strong></label>
+                            <p class="form-control-plaintext border p-2 bg-light">@Model.Title</p>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(Model.Description))
+                        {
+                            <div class="form-group mb-3">
+                                <label class="form-label"><strong>Description:</strong></label>
+                                <p class="form-control-plaintext border p-2 bg-light">@Model.Description</p>
+                            </div>
+                        }
+
+                        <div class="form-group mb-3">
+                            <label class="form-label"><strong>Button Text:</strong></label>
+                            <p class="form-control-plaintext border p-2 bg-light">@Model.ButtonText</p>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(Model.ButtonLink))
+                        {
+                            <div class="form-group mb-3">
+                                <label class="form-label"><strong>Button Link:</strong></label>
+                                <p class="form-control-plaintext border p-2 bg-light">
+                                    <a href="@Model.ButtonLink" target="_blank" class="text-primary">@Model.ButtonLink</a>
+                                </p>
+                            </div>
+                        }
+
+                        <div class="form-group mb-3">
+                            <label class="form-label"><strong>Display Order:</strong></label>
+                            <p class="form-control-plaintext border p-2 bg-light">
+                                <span class="badge badge-primary">@Model.Order</span>
+                            </p>
+                        </div>
+
+                        @if (Model.CreatedAt != default)
+                        {
+                            <div class="form-group mb-3">
+                                <label class="form-label"><strong>Created At:</strong></label>
+                                <p class="form-control-plaintext border p-2 bg-light">@Model.CreatedAt.ToString("dd MMM yyyy, HH:mm")</p>
+                            </div>
+                        }
+
+                        @if (Model.UpdatedAt != null)
+                        {
+                            <div class="form-group mb-3">
+                                <label class="form-label"><strong>Last Updated:</strong></label>
+                                <p class="form-control-plaintext border p-2 bg-light">@Model.UpdatedAt.Value.ToString("dd MMM yyyy, HH:mm")</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="form-group mt-4">
+                    <div class="btn-group me-2" role="group" aria-label="Primary actions">
+                        <a asp-area="Manage" asp-controller="Slider" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-info">
+                            <i class="fas fa-edit"></i> Edit Slider
+                        </a>
+                        <a asp-area="Manage" asp-controller="Slider" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Delete Slider
+                        </a>
+                    </div>
+                    <a asp-area="Manage" asp-controller="Slider" asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to List
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

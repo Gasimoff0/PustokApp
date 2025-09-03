@@ -1,0 +1,95 @@
+@model List<Book>
+<div class="container">
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <h2>Books</h2>
+        </div>
+        <div class="col-md-6 text-end">
+            <a asp-area="Manage" asp-controller="Book" asp-action="Create" class="btn btn-lg btn-success">Create Book</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Image</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Author</th>
+                        <th scope="col">Genre</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var book in Model)
+                    {
+                        <tr>
+                            <td>
+                                <img src="~/assets/image/products/@book.MainImageUrl" alt="@book.Title" class="img-thumbnail" style="width: 60px; height: 80px; object-fit: cover;" />
+                            </td>
+                            <td>
+                                <div>
+                                    <strong>@book.Title</strong>
+                                    <div class="small text-muted">Code: @book.Code</div>
+                                    @if (book.IsFeatured)
+                                    {
+                                        <span class="badge badge-primary">Featured</span>
+                                    }
+                                    @if (book.IsNew)
+                                    {
+                                        <span class="badge badge-warning">New</span>
+                                    }
+                                </div>
+                            </td>
+                            <td>@book.Author?.Name</td>
+                            <td>@book.Genre?.Name</td>
+                            <td>
+                                @if (book.DiscountPercentage > 0)
+                                {
+                                    <div>
+                                        <span class="text-success font-weight-bold">
+                                            $@((book.Price - (book.Price * book.DiscountPercentage) / 100).ToString("0.00"))
+                                        </span>
+                                        <div class="small">
+                                            <del class="text-muted">$@book.Price.ToString("0.00")</del>
+                                            <span class="badge badge-danger">@book.DiscountPercentage.ToString("0.##")% OFF</span>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span class="font-weight-bold">$@book.Price.ToString("0.00")</span>
+                                }
+                            </td>
+                            <td>
+                                @if (book.InStock)
+                                {
+                                    <span class="badge badge-success">In Stock</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-danger">Out of Stock</span>
+                                }
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a asp-area="Manage" asp-controller="Book" asp-action="Detail" asp-route-id="@book.Id" class="btn btn-sm btn-success" title="View Details">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a asp-area="Manage" asp-controller="Book" asp-action="Edit" asp-route-id="@book.Id" class="btn btn-sm btn-info" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a asp-area="Manage" asp-controller="Book" asp-action="Delete" asp-route-id="@book.Id" class="btn btn-sm btn-danger" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

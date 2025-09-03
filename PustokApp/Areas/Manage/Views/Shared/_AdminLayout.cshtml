@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Dashboard</title>
+    <title>PustokApp AdminPanel</title>
 
     <!-- Custom fonts for this template-->
     <link href="~/admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -42,21 +42,33 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="index.html">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                <a class="nav-link" asp-controller="dashboard" asp-action="index">
+                    <i class="fas fa-fw fa-list"></i>
                     <span>Dashboard</span>
                 </a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" asp-controller="genre" asp-action="index">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Genres</span>
+                <a class="nav-link" asp-controller="slider" asp-action="index">
+                    <i class="fas fa-fw fa-images"></i>
+                    <span>Sliders</span>
+                </a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" asp-controller="book" asp-action="index">
+                    <i class="fas fa-fw fa-book"></i>
+                    <span>Books</span>
                 </a>
             </li>
             <li class="nav-item active">
                 <a class="nav-link" asp-controller="genre" asp-action="index">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Books</span>
+                    <i class="fas fa-fw fa-list"></i>
+                    <span>Genres</span>
+                </a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" asp-controller="tag" asp-action="index">
+                    <i class="fas fa-fw fa-list"></i>
+                    <span>Tags</span>
                 </a>
             </li>
 
@@ -154,13 +166,6 @@
             <!-- Sidebar Toggler (Sidebar) -->
             <div class="text-center d-none d-md-inline">
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>
-
-            <!-- Sidebar Message -->
-            <div class="sidebar-card d-none d-lg-flex">
-                <img class="sidebar-card-illustration mb-2" src="~/admin/img/undraw_rocket.svg" alt="...">
-                <p class="text-center mb-2"><strong>SB Admin Pro</strong> is packed with premium features, components, and more!</p>
-                <a class="btn btn-success btn-sm" href="https://startbootstrap.com/theme/sb-admin-pro">Upgrade to Pro!</a>
             </div>
 
         </ul>

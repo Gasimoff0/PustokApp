@@ -1,0 +1,180 @@
+@model Book
+<!-- Content Row -->
+<div class="row">
+    <div class="col-lg-10">
+        <!-- Basic Card Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h2 class="m-0 font-weight-bold text-danger">Delete Book</h2>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-danger" role="alert">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Warning!</strong> Are you sure you want to delete this book? This action cannot be undone and will also delete all associated images.
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        @if (!string.IsNullOrEmpty(Model.MainImageUrl))
+                        {
+                            <div class="form-group mb-3">
+                                <label class="form-label"><strong>Main Image:</strong></label>
+                                <div>
+                                    <img src="~/assets/image/products/@Model.MainImageUrl" alt="@Model.Title" class="img-thumbnail" style="max-width: 100%;" />
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><strong>Title:</strong></label>
+                                    <p class="form-control-plaintext border p-2 bg-light">@Model.Title</p>
+                                </div>
+                                
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><strong>Author:</strong></label>
+                                    <p class="form-control-plaintext border p-2 bg-light">@Model.Author?.Name</p>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><strong>Genre:</strong></label>
+                                    <p class="form-control-plaintext border p-2 bg-light">@Model.Genre?.Name</p>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><strong>Code:</strong></label>
+                                    <p class="form-control-plaintext border p-2 bg-light">@Model.Code</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><strong>Price:</strong></label>
+                                    <p class="form-control-plaintext border p-2 bg-light">
+                                        @if (Model.DiscountPercentage > 0)
+                                        {
+                                            <span class="text-success font-weight-bold">
+                                                $@((Model.Price - (Model.Price * Model.DiscountPercentage) / 100).ToString("0.00"))
+                                            </span>
+                                            <del class="text-muted ml-2">$@Model.Price.ToString("0.00")</del>
+                                            <span class="badge badge-danger ml-1">@Model.DiscountPercentage.ToString("0.##")% OFF</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="font-weight-bold">$@Model.Price.ToString("0.00")</span>
+                                        }
+                                    </p>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><strong>Status:</strong></label>
+                                    <p class="form-control-plaintext border p-2 bg-light">
+                                        @if (Model.InStock)
+                                        {
+                                            <span class="badge badge-success">In Stock</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-danger">Out of Stock</span>
+                                        }
+                                        
+                                        @if (Model.IsFeatured)
+                                        {
+                                            <span class="badge badge-primary ml-1">Featured</span>
+                                        }
+                                        
+                                        @if (Model.IsNew)
+                                        {
+                                            <span class="badge badge-warning ml-1">New</span>
+                                        }
+                                    </p>
+                                </div>
+
+                                @if (Model.BookImages != null && Model.BookImages.Any())
+                                {
+                                    <div class="form-group mb-3">
+                                        <label class="form-label"><strong>Additional Images:</strong></label>
+                                        <p class="form-control-plaintext border p-2 bg-light">
+                                            <span class="badge badge-info">@Model.BookImages.Count additional image(s)</span>
+                                        </p>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(Model.Description))
+                        {
+                            <div class="form-group mb-3">
+                                <label class="form-label"><strong>Description:</strong></label>
+                                <p class="form-control-plaintext border p-2 bg-light">@Model.Description</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button type="button" class="btn btn-danger" onclick="confirmDelete()">
+                        <i class="fas fa-trash"></i> Delete Book
+                    </button>
+                    <a asp-area="Manage" asp-controller="Book" asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+
+                <!-- Hidden form for actual deletion -->
+                <form id="deleteForm" method="post" style="display: none;">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteModalLabel">
+                    <i class="fas fa-exclamation-triangle"></i> Confirm Delete
+                </h5>
+                <button class="close text-white" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete the book "<strong>@Model.Title</strong>"?</p>
+                <p class="text-muted">This action cannot be undone and will also delete:</p>
+                <ul class="text-muted">
+                    <li>Main image and hover image</li>
+                    @if (Model.BookImages != null && Model.BookImages.Any())
+                    {
+                        <li>@Model.BookImages.Count additional image(s)</li>
+                    }
+                    <li>All book data and associations</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button class="btn btn-danger" type="button" onclick="submitDelete()">
+                    <i class="fas fa-trash"></i> Yes, Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function confirmDelete() {
+            $('#deleteModal').modal('show');
+        }
+
+        function submitDelete() {
+            document.getElementById('deleteForm').submit();
+        }
+    </script>
+}

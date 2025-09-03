@@ -1,0 +1,176 @@
+@model Book
+<!-- Content Row -->
+<div class="row">
+    <div class="col-lg-12">
+        <!-- Book Details Card -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h2 class="m-0 font-weight-bold text-primary">Book Details</h2>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        @if (!string.IsNullOrEmpty(Model.MainImageUrl))
+                        {
+                            <div class="form-group mb-3">
+                                <label class="form-label"><strong>Main Image:</strong></label>
+                                <div>
+                                    <img src="~/assets/image/products/@Model.MainImageUrl" alt="@Model.Title" class="img-thumbnail" style="max-width: 100%;" />
+                                </div>
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(Model.HoverImageUrl))
+                        {
+                            <div class="form-group mb-3">
+                                <label class="form-label"><strong>Hover Image:</strong></label>
+                                <div>
+                                    <img src="~/assets/image/products/@Model.HoverImageUrl" alt="@Model.Title Hover" class="img-thumbnail" style="max-width: 100%;" />
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><strong>Book ID:</strong></label>
+                                    <p class="form-control-plaintext border p-2 bg-light">@Model.Id</p>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><strong>Title:</strong></label>
+                                    <p class="form-control-plaintext border p-2 bg-light">@Model.Title</p>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><strong>Code:</strong></label>
+                                    <p class="form-control-plaintext border p-2 bg-light">@Model.Code</p>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><strong>Author:</strong></label>
+                                    <p class="form-control-plaintext border p-2 bg-light">@Model.Author?.Name</p>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><strong>Genre:</strong></label>
+                                    <p class="form-control-plaintext border p-2 bg-light">@Model.Genre?.Name</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><strong>Price:</strong></label>
+                                    <p class="form-control-plaintext border p-2 bg-light">
+                                        @if (Model.DiscountPercentage > 0)
+                                        {
+                                            <span class="text-success font-weight-bold">
+                                                $@((Model.Price - (Model.Price * Model.DiscountPercentage) / 100).ToString("0.00"))
+                                            </span>
+                                            <del class="text-muted ml-2">$@Model.Price.ToString("0.00")</del>
+                                            <span class="badge badge-danger ml-1">@Model.DiscountPercentage.ToString("0.##")% OFF</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="font-weight-bold">$@Model.Price.ToString("0.00")</span>
+                                        }
+                                    </p>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><strong>Status:</strong></label>
+                                    <p class="form-control-plaintext border p-2 bg-light">
+                                        @if (Model.InStock)
+                                        {
+                                            <span class="badge badge-success">In Stock</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-danger">Out of Stock</span>
+                                        }
+                                        
+                                        @if (Model.IsFeatured)
+                                        {
+                                            <span class="badge badge-primary ml-1">Featured</span>
+                                        }
+                                        
+                                        @if (Model.IsNew)
+                                        {
+                                            <span class="badge badge-warning ml-1">New</span>
+                                        }
+                                    </p>
+                                </div>
+
+                                @if (Model.CreatedAt != default)
+                                {
+                                    <div class="form-group mb-3">
+                                        <label class="form-label"><strong>Created At:</strong></label>
+                                        <p class="form-control-plaintext border p-2 bg-light">@Model.CreatedAt.ToString("dd MMM yyyy, HH:mm")</p>
+                                    </div>
+                                }
+
+                                @if (Model.UpdatedAt != null)
+                                {
+                                    <div class="form-group mb-3">
+                                        <label class="form-label"><strong>Last Updated:</strong></label>
+                                        <p class="form-control-plaintext border p-2 bg-light">@Model.UpdatedAt.Value.ToString("dd MMM yyyy, HH:mm")</p>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(Model.Description))
+                        {
+                            <div class="form-group mb-3">
+                                <label class="form-label"><strong>Description:</strong></label>
+                                <p class="form-control-plaintext border p-2 bg-light">@Model.Description</p>
+                            </div>
+                        }
+
+                        @if (Model.BookTags != null && Model.BookTags.Any())
+                        {
+                            <div class="form-group mb-3">
+                                <label class="form-label"><strong>Tags:</strong></label>
+                                <p class="form-control-plaintext border p-2 bg-light">
+                                    @foreach (var tag in Model.BookTags)
+                                    {
+                                        <span class="badge badge-secondary mr-1">@tag.Tag?.Name</span>
+                                    }
+                                </p>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                @if (Model.BookImages != null && Model.BookImages.Any())
+                {
+                    <hr />
+                    <h5>Additional Images</h5>
+                    <div class="row">
+                        @foreach (var image in Model.BookImages)
+                        {
+                            <div class="col-md-3 col-sm-4 col-6 mb-3">
+                                <img src="~/assets/image/products/@image.ImageUrl" alt="Book Image" class="img-thumbnail" style="width: 100%; height: 150px; object-fit: cover;" />
+                            </div>
+                        }
+                    </div>
+                }
+
+                <div class="form-group mt-4">
+                    <a asp-area="Manage" asp-controller="Book" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-info">
+                        <i class="fas fa-edit"></i> Edit Book
+                    </a>
+                    <a asp-area="Manage" asp-controller="Book" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Delete Book
+                    </a>
+                    <a asp-area="Manage" asp-controller="Book" asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to List
+                    </a>
+                    <a asp-controller="Book" asp-action="Detail" asp-route-id="@Model.Id" target="_blank" class="btn btn-success">
+                        <i class="fas fa-external-link-alt"></i> View on Site
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

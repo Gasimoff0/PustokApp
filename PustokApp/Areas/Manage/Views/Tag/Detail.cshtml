@@ -1,0 +1,149 @@
+@model Tag
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h2 class="m-0 font-weight-bold text-primary">Tag Details</h2>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label class="form-label"><strong>Tag ID:</strong></label>
+                            <p class="form-control-plaintext border p-2 bg-light">@Model.Id</p>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label class="form-label"><strong>Tag Name:</strong></label>
+                            <p class="form-control-plaintext border p-2 bg-light">
+                                <span class="badge badge-secondary badge-lg">@Model.Name</span>
+                            </p>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label class="form-label"><strong>Books Count:</strong></label>
+                            <p class="form-control-plaintext border p-2 bg-light">
+                                @if (Model.BookTags != null && Model.BookTags.Any())
+                                {
+                                    <span class="badge badge-primary">@Model.BookTags.Count Books</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-light">No Books assigned</span>
+                                }
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                @if (Model.BookTags != null && Model.BookTags.Any())
+                {
+                    <hr />
+                    <h5><i class="fas fa-books text-primary"></i> Books with this Tag</h5>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Title</th>
+                                    <th>Author</th>
+                                    <th>Genre</th>
+                                    <th>Price</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var bookTag in Model.BookTags)
+                                {
+                                    var book = bookTag.Book;
+                                    <tr>
+                                        <td>
+                                            @if (!string.IsNullOrEmpty(book.MainImageUrl))
+                                            {
+                                                <img src="~/assets/image/products/@book.MainImageUrl" alt="@book.Title" class="img-thumbnail" style="width: 50px; height: 60px; object-fit: cover;" />
+                                            }
+                                            else
+                                            {
+                                                <div class="bg-light d-flex align-items-center justify-content-center" style="width: 50px; height: 60px;">
+                                                    <i class="fas fa-book text-muted"></i>
+                                                </div>
+                                            }
+                                        </td>
+                                        <td>
+                                            <strong>@book.Title</strong>
+                                            <div class="small text-muted">Code: @book.Code</div>
+                                        </td>
+                                        <td>@book.Author?.Name</td>
+                                        <td>@book.Genre?.Name</td>
+                                        <td>
+                                            @if (book.DiscountPercentage > 0)
+                                            {
+                                                <div>
+                                                    <span class="text-success font-weight-bold">
+                                                        $@((book.Price - (book.Price * book.DiscountPercentage) / 100).ToString("0.00"))
+                                                    </span>
+                                                    <div class="small">
+                                                        <del class="text-muted">$@book.Price.ToString("0.00")</del>
+                                                    </div>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <span class="font-weight-bold">$@book.Price.ToString("0.00")</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (book.InStock)
+                                            {
+                                                <span class="badge badge-success">In Stock</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-danger">Out of Stock</span>
+                                            }
+                                            @if (book.IsFeatured)
+                                            {
+                                                <span class="badge badge-primary">Featured</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <a asp-area="Manage" asp-controller="Book" asp-action="Detail" asp-route-id="@book.Id" class="btn btn-sm btn-success" title="View Book Details">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a asp-area="Manage" asp-controller="Book" asp-action="Edit" asp-route-id="@book.Id" class="btn btn-sm btn-warning" title="Edit Book">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <hr />
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>No books found</strong> with this tag. You can assign this tag to books when creating or editing them.
+                    </div>
+                }
+
+                <div class="form-group mt-4">
+                    <div class="btn-group me-2" role="group" aria-label="Primary actions">
+                        <a asp-area="Manage" asp-controller="Tag" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-info">
+                            <i class="fas fa-edit"></i> Edit Tag
+                        </a>
+                        <a asp-area="Manage" asp-controller="Tag" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Delete Tag
+                        </a>
+                    </div>
+                    <a asp-area="Manage" asp-controller="Tag" asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to List
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,194 @@
+@model Slider
+<!-- Content Row -->
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Basic Card Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h2 class="m-0 font-weight-bold text-info">Edit Slider</h2>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    
+                    <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="ImageUrl" />
+                    <input type="hidden" asp-for="CreatedAt" />
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Title" class="form-label"></label>
+                        <input asp-for="Title" class="form-control" placeholder="Enter slider title" required />
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Description" class="form-label"></label>
+                        <textarea asp-for="Description" class="form-control" rows="3" placeholder="Enter slider description (optional)"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="ButtonText" class="form-label"></label>
+                        <input asp-for="ButtonText" class="form-control" placeholder="Enter button text" required />
+                        <span asp-validation-for="ButtonText" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="ButtonLink" class="form-label"></label>
+                        <input asp-for="ButtonLink" class="form-control" placeholder="Enter button link (optional)" />
+                        <span asp-validation-for="ButtonLink" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Order" class="form-label"></label>
+                        <input asp-for="Order" class="form-control" type="number" min="0" placeholder="Enter display order" />
+                        <span asp-validation-for="Order" class="text-danger"></span>
+                    </div>
+
+                    <hr />
+                    <h5>Current Image</h5>
+                    
+                    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                    {
+                        <div class="form-group mb-3">
+                            <div class="current-image-preview">
+                                <div class="card">
+                                    <div class="card-header bg-light">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-image text-primary"></i> Current Slider Image
+                                            <span class="badge badge-success ms-2">Active</span>
+                                        </h6>
+                                    </div>
+                                    <div class="card-body text-center">
+                                        <img src="~/assets/image/bg-images/@Model.ImageUrl" alt="@Model.Title" 
+                                             class="img-thumbnail shadow-sm" style="max-width: 300px; max-height: 200px; object-fit: cover;" />
+                                        <div class="mt-2">
+                                            <small class="text-muted">Filename: @Model.ImageUrl</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            No image is currently set for this slider. Please upload an image below.
+                        </div>
+                    }
+
+                    <h5>Update Image</h5>
+                    <div class="form-group mb-3">
+                        <label for="ImageFile" class="form-label">
+                            @(string.IsNullOrEmpty(Model.ImageUrl) ? "Upload Image" : "Change Image")
+                            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                            {
+                                <span class="text-muted">(Optional)</span>
+                            }
+                            else
+                            {
+                                <span class="text-danger">*</span>
+                            }
+                        </label>
+                        <input type="file" name="ImageFile" class="form-control" accept="image/*" />
+                        <div class="form-text">
+                            @if (string.IsNullOrEmpty(Model.ImageUrl))
+                            {
+                                <i class="fas fa-info-circle text-primary"></i> @("Please select an image file (max 5MB). Supported formats: JPG, PNG, GIF")
+                            }
+                            else
+                            {
+                                <i class="fas fa-info-circle text-info"></i> @("Leave empty to keep the current image, or select a new image to replace it (max 5MB)")
+                            }
+                        </div>
+                        @if (ViewData.ModelState["ImageFile"]?.Errors.Count > 0)
+                        {
+                            <div class="text-danger mt-2">
+                                @foreach (var error in ViewData.ModelState["ImageFile"].Errors)
+                                {
+                                    <div><i class="fas fa-exclamation-circle"></i> @error.ErrorMessage</div>
+                                }
+                            </div>
+                        }
+                    </div>
+
+                    <div class="form-group">
+                        <div class="btn-group me-2" role="group" aria-label="Primary actions">
+                            <button type="submit" class="btn btn-info">
+                                <i class="fas fa-save"></i> Update Slider
+                            </button>
+                            <a asp-area="Manage" asp-controller="Slider" asp-action="Detail" asp-route-id="@Model.Id" class="btn btn-success">
+                                <i class="fas fa-eye"></i> View Details
+                            </a>
+                        </div>
+                        <a asp-area="Manage" asp-controller="Slider" asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to List
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.21.0/jquery.validate.min.js" integrity="sha512-KFHXdr2oObHKI9w4Hv1XPKc898mE4kgYx58oqsc/JqqdLMDI4YjOLzom+EMlW8HFUd0QfjfAvxSL6sEq/a42fQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js" integrity="sha512-xq+Vm8jC94ynOikewaQXMEkJIOBp7iArs3IhFWSWdRT3Pq8wFz46p+ZDFAR7kHnSFf+zUv52B3prRYnbDRdgog==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const imageFileInput = document.querySelector('input[name="ImageFile"]');
+            const currentImagePreview = document.querySelector('.current-image-preview');
+            
+            if (imageFileInput) {
+                imageFileInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        // Show preview of new image selection
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            if (currentImagePreview) {
+                                const newPreview = document.createElement('div');
+                                newPreview.className = 'mt-3';
+                                newPreview.innerHTML = `
+                                    <div class="card border-success">
+                                        <div class="card-header bg-light-success">
+                                            <h6 class="mb-0 text-success">
+                                                <i class="fas fa-upload"></i> New Image Selected
+                                                <span class="badge badge-warning ms-2">Pending Upload</span>
+                                            </h6>
+                                        </div>
+                                        <div class="card-body text-center">
+                                            <img src="${e.target.result}" alt="New Image Preview" 
+                                                 class="img-thumbnail shadow-sm" style="max-width: 300px; max-height: 200px; object-fit: cover;" />
+                                            <div class="mt-2">
+                                                <small class="text-muted">Preview: ${file.name}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                                
+                                // Remove any existing new preview
+                                const existingNewPreview = document.querySelector('.new-image-preview');
+                                if (existingNewPreview) {
+                                    existingNewPreview.remove();
+                                }
+                                
+                                newPreview.className += ' new-image-preview';
+                                currentImagePreview.parentNode.insertBefore(newPreview, currentImagePreview.nextSibling);
+                            }
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        // Remove preview if no file selected
+                        const existingNewPreview = document.querySelector('.new-image-preview');
+                        if (existingNewPreview) {
+                            existingNewPreview.remove();
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+}

@@ -1,0 +1,188 @@
+@model Book
+<!-- Content Row -->
+<div class="row">
+    <div class="col-lg-10">
+        <!-- Basic Card Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h2 class="m-0 font-weight-bold text-primary">Create a Book</h2>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="Title" class="form-label"></label>
+                                <input asp-for="Title" class="form-control" placeholder="Enter book title" required />
+                                <span asp-validation-for="Title" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="Code" class="form-label"></label>
+                                <input asp-for="Code" class="form-control" placeholder="Auto-generated if empty" />
+                                <span asp-validation-for="Code" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Description" class="form-label"></label>
+                        <textarea asp-for="Description" class="form-control" rows="4" placeholder="Enter book description" required></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group mb-3">
+                                <label asp-for="AuthorId" class="form-label">Author</label>
+                                <select asp-for="AuthorId" class="form-control" asp-items="ViewBag.Authors" required>
+                                    <option value="">Select Author</option>
+                                </select>
+                                <span asp-validation-for="AuthorId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group mb-3">
+                                <label asp-for="GenreId" class="form-label">Genre</label>
+                                <select asp-for="GenreId" class="form-control" asp-items="ViewBag.Genres" required>
+                                    <option value="">Select Genre</option>
+                                </select>
+                                <span asp-validation-for="GenreId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group mb-3">
+                                <label asp-for="Price" class="form-label"></label>
+                                <input asp-for="Price" class="form-control" type="number" step="0.01" min="0" placeholder="0.00" required />
+                                <span asp-validation-for="Price" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="DiscountPercentage" class="form-label">Discount (%)</label>
+                                <input asp-for="DiscountPercentage" class="form-control" type="number" step="0.01" min="0" max="100" value="0" />
+                                <span asp-validation-for="DiscountPercentage" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label class="form-label">Book Status</label>
+                                <div class="form-check">
+                                    <input asp-for="InStock" class="form-check-input" type="checkbox" checked />
+                                    <label asp-for="InStock" class="form-check-label">In Stock</label>
+                                </div>
+                                <div class="form-check">
+                                    <input asp-for="IsFeatured" class="form-check-input" type="checkbox" />
+                                    <label asp-for="IsFeatured" class="form-check-label">Featured</label>
+                                </div>
+                                <div class="form-check">
+                                    <input asp-for="IsNew" class="form-check-input" type="checkbox" />
+                                    <label asp-for="IsNew" class="form-check-label">New Book</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr />
+                    <h5>Book Images</h5>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="MainImageFile" class="form-label">Main Image <span class="text-danger">*</span></label>
+                                <input type="file" name="MainImageFile" class="form-control" accept="image/*" required />
+                                <small class="form-text text-muted">This will be the primary display image</small>
+                                @if (ViewData.ModelState["MainImageFile"]?.Errors.Count > 0)
+                                {
+                                    <div class="text-danger mt-1">
+                                        @foreach (var error in ViewData.ModelState["MainImageFile"].Errors)
+                                        {
+                                            <div>@error.ErrorMessage</div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="HoverImageFile" class="form-label">Hover Image <span class="text-danger">*</span></label>
+                                <input type="file" name="HoverImageFile" class="form-control" accept="image/*" required />
+                                <small class="form-text text-muted">This will show on hover</small>
+                                @if (ViewData.ModelState["HoverImageFile"]?.Errors.Count > 0)
+                                {
+                                    <div class="text-danger mt-1">
+                                        @foreach (var error in ViewData.ModelState["HoverImageFile"].Errors)
+                                        {
+                                            <div>@error.ErrorMessage</div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="AdditionalImages" class="form-label">Additional Images (Optional)</label>
+                        <input type="file" name="AdditionalImages" class="form-control" accept="image/*" multiple />
+                        <small class="form-text text-muted">Select multiple images for gallery (optional)</small>
+                    </div>
+
+                    <hr />
+                    <h5><i class="fas fa-tags text-info"></i> Book Tags</h5>
+                    
+                    <div class="form-group mb-3">
+                        <label class="form-label">Select Tags (Optional)</label>
+                        <div class="card">
+                            <div class="card-body">
+                                @if (ViewBag.Tags != null && ((List<Tag>)ViewBag.Tags).Any())
+                                {
+                                    <div class="row">
+                                        @foreach (var tag in (List<Tag>)ViewBag.Tags)
+                                        {
+                                            <div class="col-md-4 col-sm-6 mb-2">
+                                                <div class="form-check">
+                                                    <input type="checkbox" name="SelectedTagIds" value="@tag.Id" class="form-check-input" id="tag_@tag.Id" />
+                                                    <label class="form-check-label" for="tag_@tag.Id">
+                                                        <span class="badge badge-outline-secondary">@tag.Name</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="alert alert-info">
+                                        <i class="fas fa-info-circle"></i> No tags available. You can create tags first and then assign them to books.
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <small class="form-text text-muted">
+                            <i class="fas fa-lightbulb text-warning"></i> Tags help categorize and organize your books for better searchability.
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save"></i> Create Book
+                        </button>
+                        <a asp-area="Manage" asp-controller="Book" asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.21.0/jquery.validate.min.js" integrity="sha512-KFHXdr2oObHKI9w4Hv1XPKc898mE4kgYx58oqsc/JqqdLMDI4YjOLzom+EMlW8HFUd0QfjfAvxSL6sEq/a42fQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js" integrity="sha512-xq+Vm8jC94ynOikewaQXMEkJIOBp7iArs3IhFWSWdRT3Pq8wFz46p+ZDFAR7kHnSFf+zUv52B3prRYnbDRdgog==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+}

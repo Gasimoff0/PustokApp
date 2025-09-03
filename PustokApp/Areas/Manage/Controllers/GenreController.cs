@@ -24,8 +24,6 @@ namespace PustokApp.Areas.Manage.Controllers
         [HttpPost]
         public IActionResult Create(Genre genre)
         {
-            ModelState.Remove("Books");
-            
             if (!ModelState.IsValid)
                 return View(genre);
                 
@@ -88,8 +86,6 @@ namespace PustokApp.Areas.Manage.Controllers
         [HttpPost]
         public IActionResult Edit(Genre genre)
         {
-            ModelState.Remove("Books");
-            
             if (!ModelState.IsValid)
                 return View(genre);
                 

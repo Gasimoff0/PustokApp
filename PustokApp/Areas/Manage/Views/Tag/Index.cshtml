@@ -1,0 +1,59 @@
+@model List<Tag>
+<div class="container">
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <h2>Tags</h2>
+        </div>
+        <div class="col-md-6 text-end">
+            <a asp-area="Manage" asp-controller="Tag" asp-action="Create" class="btn btn-lg btn-success">Create Tag</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Books Count</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var tag in Model)
+                    {
+                        <tr>
+                            <td>@tag.Id</td>
+                            <td>
+                                <span class="badge badge-secondary">@tag.Name</span>
+                            </td>
+                            <td>
+                                @if (tag.BookTags != null && tag.BookTags.Any())
+                                {
+                                    <span class="badge badge-primary">@tag.BookTags.Count Books</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-light">No Books</span>
+                                }
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group" aria-label="Tag actions">
+                                    <a asp-area="Manage" asp-controller="Tag" asp-action="Detail" asp-route-id="@tag.Id" class="btn btn-sm btn-success" title="View Details">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a asp-area="Manage" asp-controller="Tag" asp-action="Edit" asp-route-id="@tag.Id" class="btn btn-sm btn-info" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a asp-area="Manage" asp-controller="Tag" asp-action="Delete" asp-route-id="@tag.Id" class="btn btn-sm btn-danger" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

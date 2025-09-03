@@ -1,0 +1,414 @@
+@model Book
+<!-- Content Row -->
+<div class="row">
+    <div class="col-lg-10">
+        <!-- Basic Card Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h2 class="m-0 font-weight-bold text-info">Edit Book</h2>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    
+                    <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="MainImageUrl" />
+                    <input type="hidden" asp-for="HoverImageUrl" />
+                    <input type="hidden" asp-for="CreatedAt" />
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="Title" class="form-label"></label>
+                                <input asp-for="Title" class="form-control" placeholder="Enter book title" required />
+                                <span asp-validation-for="Title" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="Code" class="form-label"></label>
+                                <input asp-for="Code" class="form-control" placeholder="Book code" />
+                                <span asp-validation-for="Code" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Description" class="form-label"></label>
+                        <textarea asp-for="Description" class="form-control" rows="4" placeholder="Enter book description" required></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group mb-3">
+                                <label asp-for="AuthorId" class="form-label">Author</label>
+                                <select asp-for="AuthorId" class="form-control" asp-items="ViewBag.Authors" required>
+                                    <option value="">Select Author</option>
+                                </select>
+                                <span asp-validation-for="AuthorId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group mb-3">
+                                <label asp-for="GenreId" class="form-label">Genre</label>
+                                <select asp-for="GenreId" class="form-control" asp-items="ViewBag.Genres" required>
+                                    <option value="">Select Genre</option>
+                                </select>
+                                <span asp-validation-for="GenreId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group mb-3">
+                                <label asp-for="Price" class="form-label"></label>
+                                <input asp-for="Price" class="form-control" type="number" step="0.01" min="0" placeholder="0.00" required />
+                                <span asp-validation-for="Price" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="DiscountPercentage" class="form-label">Discount (%)</label>
+                                <input asp-for="DiscountPercentage" class="form-control" type="number" step="0.01" min="0" max="100" />
+                                <span asp-validation-for="DiscountPercentage" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label class="form-label">Book Status</label>
+                                <div class="form-check">
+                                    <input asp-for="InStock" class="form-check-input" type="checkbox" />
+                                    <label asp-for="InStock" class="form-check-label">In Stock</label>
+                                </div>
+                                <div class="form-check">
+                                    <input asp-for="IsFeatured" class="form-check-input" type="checkbox" />
+                                    <label asp-for="IsFeatured" class="form-check-label">Featured</label>
+                                </div>
+                                <div class="form-check">
+                                    <input asp-for="IsNew" class="form-check-input" type="checkbox" />
+                                    <label asp-for="IsNew" class="form-check-label">New Book</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr />
+                    <h5><i class="fas fa-images text-primary"></i> Current Book Images</h5>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            @if (!string.IsNullOrEmpty(Model.MainImageUrl))
+                            {
+                                <div class="form-group mb-3">
+                                    <div class="card current-main-image">
+                                        <div class="card-header bg-light">
+                                            <h6 class="mb-0">
+                                                <i class="fas fa-image text-primary"></i> Main Image
+                                                <span class="badge badge-primary ms-2">Primary</span>
+                                            </h6>
+                                        </div>
+                                        <div class="card-body text-center">
+                                            <img src="~/assets/image/products/@Model.MainImageUrl" alt="Main Image" 
+                                                 class="img-thumbnail shadow-sm" style="max-width: 200px; max-height: 150px; object-fit: cover;" />
+                                            <div class="mt-2">
+                                                <small class="text-muted">@Model.MainImageUrl</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-exclamation-triangle"></i> No main image set
+                                </div>
+                            }
+                        </div>
+                        <div class="col-md-6">
+                            @if (!string.IsNullOrEmpty(Model.HoverImageUrl))
+                            {
+                                <div class="form-group mb-3">
+                                    <div class="card current-hover-image">
+                                        <div class="card-header bg-light">
+                                            <h6 class="mb-0">
+                                                <i class="fas fa-image text-info"></i> Hover Image
+                                                <span class="badge badge-info ms-2">Hover</span>
+                                            </h6>
+                                        </div>
+                                        <div class="card-body text-center">
+                                            <img src="~/assets/image/products/@Model.HoverImageUrl" alt="Hover Image" 
+                                                 class="img-thumbnail shadow-sm" style="max-width: 200px; max-height: 150px; object-fit: cover;" />
+                                            <div class="mt-2">
+                                                <small class="text-muted">@Model.HoverImageUrl</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-exclamation-triangle"></i> No hover image set
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    @if (Model.BookImages != null && Model.BookImages.Any())
+                    {
+                        <div class="form-group mb-3">
+                            <div class="card">
+                                <div class="card-header bg-light">
+                                    <h6 class="mb-0">
+                                        <i class="fas fa-images text-success"></i> Additional Gallery Images
+                                        <span class="badge badge-success ms-2">@Model.BookImages.Count Image(s)</span>
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        @foreach (var image in Model.BookImages)
+                                        {
+                                            <div class="col-md-3 col-sm-4 col-6 mb-3" id="image-@image.Id">
+                                                <div class="position-relative">
+                                                    <img src="~/assets/image/products/@image.ImageUrl" alt="Book Image" 
+                                                         class="img-thumbnail shadow-sm" style="width: 100%; height: 120px; object-fit: cover;" />
+                                                    <button type="button" class="btn btn-danger btn-sm position-absolute" 
+                                                            style="top: 5px; right: 5px;" onclick="deleteBookImage(@image.Id)"
+                                                            title="Delete this image">
+                                                        <i class="fas fa-times"></i>
+                                                    </button>
+                                                    <div class="text-center mt-1">
+                                                        <small class="text-muted">@image.ImageUrl</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i> No additional gallery images. You can add some below.
+                        </div>
+                    }
+
+                    <hr />
+                    <h5><i class="fas fa-upload text-success"></i> Update Images</h5>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="MainImageFile" class="form-label">
+                                    Change Main Image
+                                    <span class="text-muted">(Optional)</span>
+                                </label>
+                                <input type="file" name="MainImageFile" class="form-control" accept="image/*" />
+                                <div class="form-text">
+                                    <i class="fas fa-info-circle text-info"></i> Leave empty to keep current main image
+                                </div>
+                                @if (ViewData.ModelState["MainImageFile"]?.Errors.Count > 0)
+                                {
+                                    <div class="text-danger mt-1">
+                                        @foreach (var error in ViewData.ModelState["MainImageFile"].Errors)
+                                        {
+                                            <div><i class="fas fa-exclamation-circle"></i> @error.ErrorMessage</div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="HoverImageFile" class="form-label">
+                                    Change Hover Image
+                                    <span class="text-muted">(Optional)</span>
+                                </label>
+                                <input type="file" name="HoverImageFile" class="form-control" accept="image/*" />
+                                <div class="form-text">
+                                    <i class="fas fa-info-circle text-info"></i> Leave empty to keep current hover image
+                                </div>
+                                @if (ViewData.ModelState["HoverImageFile"]?.Errors.Count > 0)
+                                {
+                                    <div class="text-danger mt-1">
+                                        @foreach (var error in ViewData.ModelState["HoverImageFile"].Errors)
+                                        {
+                                            <div><i class="fas fa-exclamation-circle"></i> @error.ErrorMessage</div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="AdditionalImages" class="form-label">
+                            Add More Gallery Images
+                            <span class="text-muted">(Optional)</span>
+                        </label>
+                        <input type="file" name="AdditionalImages" class="form-control" accept="image/*" multiple />
+                        <div class="form-text">
+                            <i class="fas fa-info-circle text-success"></i> Select additional images to add to the gallery (multiple selection allowed)
+                        </div>
+                    </div>
+
+                    <hr />
+                    <h5><i class="fas fa-tags text-info"></i> Book Tags</h5>
+                    
+                    <div class="form-group mb-3">
+                        <label class="form-label">Select Tags (Optional)</label>
+                        <div class="card">
+                            <div class="card-body">
+                                @if (ViewBag.Tags != null && ((List<Tag>)ViewBag.Tags).Any())
+                                {
+                                    <div class="row">
+                                        @{
+                                            var selectedTagIds = ViewBag.SelectedTagIds as List<int> ?? new List<int>();
+                                        }
+                                        @foreach (var tag in (List<Tag>)ViewBag.Tags)
+                                        {
+                                            <div class="col-md-4 col-sm-6 mb-2">
+                                                <div class="form-check">
+                                                    <input type="checkbox" name="SelectedTagIds" value="@tag.Id" 
+                                                           class="form-check-input" id="tag_@tag.Id" 
+                                                           @(selectedTagIds.Contains(tag.Id) ? "checked" : "") />
+                                                    <label class="form-check-label" for="tag_@tag.Id">
+                                                        <span class="badge @(selectedTagIds.Contains(tag.Id) ? "badge-primary" : "badge-outline-secondary")">
+                                                            @tag.Name
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="alert alert-info">
+                                        <i class="fas fa-info-circle"></i> No tags available. You can create tags first and then assign them to books.
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <small class="form-text text-muted">
+                            <i class="fas fa-lightbulb text-warning"></i> Selected tags are highlighted in blue. You can change the selection by checking/unchecking boxes.
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="btn-group me-2" role="group" aria-label="Primary actions">
+                            <button type="submit" class="btn btn-info">
+                                <i class="fas fa-save"></i> Update Book
+                            </button>
+                            <a asp-area="Manage" asp-controller="Book" asp-action="Detail" asp-route-id="@Model.Id" class="btn btn-success">
+                                <i class="fas fa-eye"></i> View Details
+                            </a>
+                        </div>
+                        <a asp-area="Manage" asp-controller="Book" asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to List
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.21.0/jquery.validate.min.js" integrity="sha512-KFHXdr2oObHKI9w4Hv1XPKc898mE4kgYx58oqsc/JqqdLMDI4YjOLzom+EMlW8HFUd0QfjfAvxSL6sEq/a42fQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js" integrity="sha512-xq+Vm8jC94ynOikewaQXMEkJIOBp7iArs3IhFWSWdRT3Pq8wFz46p+ZDFAR7kHnSFf+zUv52B3prRYnbDRdgog==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    <script>
+        function deleteBookImage(imageId) {
+            if (confirm('Are you sure you want to delete this image?')) {
+                $.ajax({
+                    url: '@Url.Action("DeleteBookImage", "Book", new { area = "Manage" })',
+                    type: 'POST',
+                    data: { id: imageId },
+                    success: function (result) {
+                        if (result.success) {
+                            $('#image-' + imageId).fadeOut(300, function () {
+                                $(this).remove();
+                                // Update badge count
+                                updateImageCount();
+                            });
+                        } else {
+                            alert('Failed to delete image.');
+                        }
+                    },
+                    error: function () {
+                        alert('Error occurred while deleting image.');
+                    }
+                });
+            }
+        }
+        
+        function updateImageCount() {
+            const remainingImages = document.querySelectorAll('[id^="image-"]').length;
+            const badge = document.querySelector('.badge-success');
+            if (badge) {
+                badge.textContent = remainingImages + ' Image(s)';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const mainImageInput = document.querySelector('input[name="MainImageFile"]');
+            const hoverImageInput = document.querySelector('input[name="HoverImageFile"]');
+            
+            function showImagePreview(input, targetClass, title) {
+                input.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const currentImageCard = document.querySelector('.' + targetClass);
+                            if (currentImageCard) {
+                                // Create new preview
+                                const newPreview = document.createElement('div');
+                                newPreview.className = 'mt-3 new-' + targetClass;
+                                newPreview.innerHTML = `
+                                    <div class="card border-success">
+                                        <div class="card-header bg-light-success">
+                                            <h6 class="mb-0 text-success">
+                                                <i class="fas fa-upload"></i> New ${title}
+                                                <span class="badge badge-warning ms-2">Pending Upload</span>
+                                            </h6>
+                                        </div>
+                                        <div class="card-body text-center">
+                                            <img src="${e.target.result}" alt="New ${title} Preview" 
+                                                 class="img-thumbnail shadow-sm" style="max-width: 200px; max-height: 150px; object-fit: cover;" />
+                                            <div class="mt-2">
+                                                <small class="text-muted">Preview: ${file.name}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                                
+                                // Remove any existing new preview
+                                const existingNewPreview = document.querySelector('.new-' + targetClass);
+                                if (existingNewPreview) {
+                                    existingNewPreview.remove();
+                                }
+                                
+                                currentImageCard.parentNode.insertBefore(newPreview, currentImageCard.nextSibling);
+                            }
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+            
+            if (mainImageInput) {
+                showImagePreview(mainImageInput, 'current-main-image', 'Main Image');
+            }
+            
+            if (hoverImageInput) {
+                showImagePreview(hoverImageInput, 'current-hover-image', 'Hover Image');
+            }
+        });
+    </script>
+}
