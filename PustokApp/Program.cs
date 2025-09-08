@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using PustokApp.Data;
 using PustokApp.Services;
 
 namespace PustokApp
@@ -17,6 +19,22 @@ namespace PustokApp
                 options.UseSqlServer(configuration.GetConnectionString("default")));
 
             builder.Services.AddScoped<LayoutService>();
+
+            builder.Services.AddIdentity<Models.AppUser,IdentityRole>(options =>
+            {
+                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequiredLength = 6;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireDigit = true;
+                options.User.RequireUniqueEmail = true;
+                options.SignIn.RequireConfirmedEmail = true;
+                options.Lockout.MaxFailedAccessAttempts = 3;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(20);
+                options.Lockout.AllowedForNewUsers = true;  
+            }).AddEntityFrameworkStores<PustokAppDbContext>().AddErrorDescriber<CustomErrorDescriber>()
+            .AddDefaultTokenProviders();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -32,6 +50,7 @@ namespace PustokApp
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(

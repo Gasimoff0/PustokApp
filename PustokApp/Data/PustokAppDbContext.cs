@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using PustokApp.Models;
 
 namespace PustokApp.Data
 {
-    public class PustokAppDbContext(DbContextOptions<PustokAppDbContext> options) : DbContext(options)
+    public class PustokAppDbContext(DbContextOptions<PustokAppDbContext> options) : IdentityDbContext<AppUser>(options)
     {
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -1,0 +1,120 @@
+﻿@model UserLoginVm
+<div class="container">
+	<div class="row justify-content-center">
+		<div class="col-sm-12 col-md-12 col-xs-12 col-lg-6 mb--30 mb-lg--0">
+			<!-- Login Form s-->
+			<form method="post">
+				<div class="login-form">
+					<h4 class="login-title">Login</h4>
+					<p><span class="font-weight-bold">Welcome back!</span></p>
+					<div class="row">
+						<div class="col-md-12 col-12 mb--15">
+							<label asp-for="UserNameOrEmail"></label>
+							<input asp-for="UserNameOrEmail" class="mb-0 form-control"
+								   placeholder="Enter a UserName Or Email...">
+							<span asp-validation-for="UserNameOrEmail" class="text-danger"></span>
+						</div>
+						<div class="col-md-12 col-12 mb--15">
+							<label asp-for="Password"></label>
+							<input asp-for="Password" type="password" class="mb-0 form-control"
+								   placeholder="Enter a Password...">
+							<span asp-validation-for="Password" class="text-danger"></span>
+						</div>
+						<div class="col-md-12 col-12 mb--15">
+							<div class="custom-checkbox-wrapper">
+								<label class="custom-checkbox-label" asp-for="RememberMe">
+									<input asp-for="RememberMe" type="checkbox" class="custom-checkbox-input">
+									<span class="custom-checkbox-checkmark"></span>
+									<span class="checkbox-text">Remember Me</span>
+								</label>
+							</div>
+							<span asp-validation-for="RememberMe" class="text-danger"></span>
+						</div>
+						<div class="col-md-12">
+							<button type="submit" class="btn btn-outlined">Login</button>
+						</div>
+						<span class="text-danger" asp-validation-summary="ModelOnly"></span>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<style>
+	.custom-checkbox-wrapper {
+		margin: 10px 0;
+	}
+
+	.custom-checkbox-label {
+		display: flex;
+		align-items: center;
+		cursor: pointer;
+		font-size: 14px;
+		font-weight: normal;
+		margin-bottom: 0;
+		user-select: none;
+	}
+
+	.custom-checkbox-input {
+		position: absolute;
+		opacity: 0;
+		cursor: pointer;
+		height: 0;
+		width: 0;
+	}
+
+	.custom-checkbox-checkmark {
+		height: 18px;
+		width: 18px;
+		background-color: #fff;
+		border: 2px solid #ddd;
+		border-radius: 3px;
+		position: relative;
+		margin-right: 10px;
+		transition: all 0.3s ease;
+	}
+
+	.custom-checkbox-label:hover .custom-checkbox-checkmark {
+		border-color: #007bff;
+	}
+
+	.custom-checkbox-input:checked ~ .custom-checkbox-checkmark {
+		background-color: #007bff;
+		border-color: #007bff;
+	}
+
+	.custom-checkbox-checkmark:after {
+		content: "";
+		position: absolute;
+		display: none;
+	}
+
+	.custom-checkbox-input:checked ~ .custom-checkbox-checkmark:after {
+		display: block;
+	}
+
+	.custom-checkbox-checkmark:after {
+		left: 5px;
+		top: 2px;
+		width: 4px;
+		height: 8px;
+		border: solid white;
+		border-width: 0 2px 2px 0;
+		transform: rotate(45deg);
+	}
+
+	.checkbox-text {
+		color: #333;
+		font-size: 14px;
+	}
+
+	.custom-checkbox-input:focus ~ .custom-checkbox-checkmark {
+		box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+	}
+</style>
+
+@section Scripts {
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.21.0/jquery.validate.min.js" integrity="sha512-KFHXdr2oObHKI9w4Hv1XPKc898mE4kgYx58oqsc/JqqdLMDI4YjOLzom+EMlW8HFUd0QfjfAvxSL6sEq/a42fQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js" integrity="sha512-xq+Vm8jC94ynOikewaQXMEkJIOBp7iArs3IhFWSWdRT3Pq8wFz46p+ZDFAR7kHnSFf+zUv52B3prRYnbDRdgog==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+}

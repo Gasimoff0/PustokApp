@@ -1,0 +1,54 @@
+﻿@model UserRegisterVm 
+<div class="container">
+	<div class="row justify-content-center">
+		<div class="col-sm-12 col-md-12 col-xs-12 col-lg-6 mb--30 mb-lg--0">
+			<!-- Login Form s-->
+			<form method="post">
+				<div class="login-form">
+					<h4 class="login-title">New Customer</h4>
+					<p><span class="font-weight-bold">I am a new customer</span></p>
+					<div class="row">
+						<div class="col-md-12 col-12 mb--15">
+							<label asp-for="FullName" ></label>
+							<input asp-for="FullName" class="mb-0 form-control" 
+								   placeholder="Enter a FullName...">
+                            <span asp-validation-for="FullName" class="text-danger"></span>
+						</div>
+						<div class="col-md-12 col-12 mb--15">
+							<label asp-for="Email"></label>
+							<input asp-for="Email" class="mb-0 form-control"
+								   placeholder="Enter a Email Address...">
+							<span asp-validation-for="Email" class="text-danger"></span>
+						</div>
+						<div class="col-md-12 col-12 mb--15">
+							<label asp-for="Username"></label>
+							<input asp-for="Username" class="mb-0 form-control"
+								   placeholder="Enter a Username...">
+                            <span asp-validation-for="Username" class="text-danger"></span>
+                        </div>
+						<div class="col-lg-6 mb--20">
+							<label asp-for="Password"></label>
+							<input asp-for="Password" class="mb-0 form-control"
+								   placeholder="Enter a Password...">
+							<span asp-validation-for="Password" class="text-danger"></span>
+						</div>
+						<div class="col-lg-6 mb--20">
+							<label asp-for="ConfirmPassword"></label>
+							<input asp-for="ConfirmPassword" class="mb-0 form-control"
+								   placeholder="Enter a RepeatPassword...">
+							<span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+						</div>
+						<div class="col-md-12">
+							<button type="submit" class="btn btn-outlined">Register</button>
+						</div>
+                        <span class="text-danger" asp-validation-summary="ModelOnly" ></span>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+@section Scripts{
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.21.0/jquery.validate.min.js" integrity="sha512-KFHXdr2oObHKI9w4Hv1XPKc898mE4kgYx58oqsc/JqqdLMDI4YjOLzom+EMlW8HFUd0QfjfAvxSL6sEq/a42fQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js" integrity="sha512-xq+Vm8jC94ynOikewaQXMEkJIOBp7iArs3IhFWSWdRT3Pq8wFz46p+ZDFAR7kHnSFf+zUv52B3prRYnbDRdgog==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+}
