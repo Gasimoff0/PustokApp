@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using MimeKit;
 using MimeKit.Text;
 using PustokApp.Models;
+using PustokApp.Services;
 using PustokApp.ViewModels;
 
 namespace PustokApp.Controllers
@@ -13,7 +14,8 @@ namespace PustokApp.Controllers
     public class AccountController(
         UserManager<AppUser> userManager,
         SignInManager<AppUser> signInManager,
-        RoleManager<IdentityRole> roleManager) : Controller
+        RoleManager<IdentityRole> roleManager,
+        EmailService emailService) : Controller
     {
         public IActionResult Login()
         {
@@ -93,33 +95,16 @@ namespace PustokApp.Controllers
 
             await userManager.AddToRoleAsync(user, "Member");
 
-            // create email message
-
+            // Email təsdiq linki yaradın və göndərin
             var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
             var confirmationLink = Url.Action("ConfirmEmail", "Account", new { email = user.Email, token }, Request.Scheme);
 
-
-
-
-
-            var email = new MimeMessage();
-            email.From.Add(MailboxAddress.Parse("mahabbatag@code.edu.az"));
-            email.To.Add(MailboxAddress.Parse(user.Email));
-            email.Subject = "Confirm Email Address";
-            using StreamReader reader = new StreamReader("wwwroot/templates/EmailConfirmTemplate.html");
+            var emailSent = await emailService.SendEmailConfirmationAsync(user.Email, user.UserName, confirmationLink);
+            
+            if (!emailSent)
             {
-                string html = reader.ReadToEnd();
-                html = html.Replace("{{link}}", confirmationLink);
-                html = html.Replace("{{username}}", user.UserName);
-                email.Body = new TextPart(TextFormat.Html) { Text = html };
+                ModelState.AddModelError("", "İstifadəçi qeydiyyatdan keçdi, lakin təsdiq emaili göndərilmədi. Zəhmət olmasa daha sonra yenidən cəhd edin.");
             }
-
-            // send email
-            using var smtp = new SmtpClient();
-            smtp.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
-            smtp.Authenticate("mahabbatag@code.edu.az", "lexk eiml satu syqx");
-            smtp.Send(email);
-            smtp.Disconnect(true);
 
             return RedirectToAction("Login", "Account");
         }
@@ -155,6 +140,117 @@ namespace PustokApp.Controllers
                 await roleManager.CreateAsync(new IdentityRole { Name = "Member" });
             }
             return Content("Created.");
+        }
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordVm forgotPasswordVm)
+        {
+            if (!ModelState.IsValid)
+                return View(forgotPasswordVm);
+
+            var user = await userManager.FindByEmailAsync(forgotPasswordVm.Email);
+            if (user == null)
+            {
+                ViewBag.Message = "Əgər bu email ünvanı sistemimizdə qeydiyyatdan keçmişsə, şifrə sıfırlama linki göndərilmiş olacaq.";
+                return View("ForgotPasswordConfirmation");
+            }
+
+            if (!user.EmailConfirmed)
+            {
+                ModelState.AddModelError("", "Email ünvanınızı təsdiqləməmisiniz. Əvvəlcə email təsdiqini tamamlayın.");
+                return View(forgotPasswordVm);
+            }
+
+            var token = await userManager.GeneratePasswordResetTokenAsync(user);
+            var resetLink = Url.Action("ResetPassword", "Account", 
+                new { email = user.Email, token }, Request.Scheme);
+
+            var emailSent = await emailService.SendPasswordResetEmailAsync(user.Email, user.UserName, resetLink);
+
+            if (emailSent)
+            {
+                ViewBag.Message = "Şifrə sıfırlama linki email ünvanınıza göndərildi. Zəhmət olmasa email qutunuzu yoxlayın.";
+            }
+            else
+            {
+                ModelState.AddModelError("", "Email göndərilməsi zamanı xəta baş verdi. Zəhmət olmasa daha sonra yenidən cəhd edin.");
+                return View(forgotPasswordVm);
+            }
+
+            return View("ForgotPasswordConfirmation");
+        }
+
+        public IActionResult ForgotPasswordConfirmation()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> ResetPassword(string email, string token)
+        {
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(token))
+            {
+                return BadRequest("Keçərsiz şifrə sıfırlama linki.");
+            }
+
+            var user = await userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return BadRequest("İstifadəçi tapılmadı.");
+            }
+
+            var model = new ResetPasswordVm
+            {
+                Email = email,
+                Token = token
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordVm resetPasswordVm)
+        {
+            if (!ModelState.IsValid)
+                return View(resetPasswordVm);
+
+            var user = await userManager.FindByEmailAsync(resetPasswordVm.Email);
+            if (user == null)
+            {
+                ModelState.AddModelError("", "İstifadəçi tapılmadı.");
+                return View(resetPasswordVm);
+            }
+
+            var result = await userManager.ResetPasswordAsync(user, resetPasswordVm.Token, resetPasswordVm.NewPassword);
+            if (result.Succeeded)
+            {
+                await userManager.UpdateSecurityStampAsync(user);
+                
+                ViewBag.Message = "Şifrəniz uğurla yeniləndi. İndi yeni şifrənizlə daxil ola bilərsiniz.";
+                return View("ResetPasswordConfirmation");
+            }
+
+            foreach (var error in result.Errors)
+            {
+                if (error.Code == "InvalidToken")
+                {
+                    ModelState.AddModelError("", "Şifrə sıfırlama linki etibarsızdır və ya vaxtı keçmişdir. Yenidən şifrə sıfırlama tələbi edin.");
+                }
+                else
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+            }
+
+            return View(resetPasswordVm);
+        }
+
+        public IActionResult ResetPasswordConfirmation()
+        {
+            return View();
         }
         [Authorize(Roles = "Member")]
         public async Task<IActionResult> UserProfile(string tab = "dashboard")

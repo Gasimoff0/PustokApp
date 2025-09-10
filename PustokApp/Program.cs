@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using PustokApp.Data;
 using PustokApp.Services;
 
@@ -15,10 +14,11 @@ namespace PustokApp
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            builder.Services.AddDbContext<Data.PustokAppDbContext>(options =>
+            builder.Services.AddDbContext<PustokAppDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("default")));
 
             builder.Services.AddScoped<LayoutService>();
+            builder.Services.AddScoped<EmailService>();
 
             builder.Services.AddIdentity<Models.AppUser,IdentityRole>(options =>
             {
@@ -32,8 +32,18 @@ namespace PustokApp
                 options.Lockout.MaxFailedAccessAttempts = 3;
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(20);
                 options.Lockout.AllowedForNewUsers = true;  
-            }).AddEntityFrameworkStores<PustokAppDbContext>().AddErrorDescriber<CustomErrorDescriber>()
-            .AddDefaultTokenProviders();
+                
+                // Password Reset Token müdd?ti (1 saat)
+                options.Tokens.PasswordResetTokenProvider = TokenOptions.DefaultProvider;
+            })
+            .AddEntityFrameworkStores<PustokAppDbContext>()
+            .AddErrorDescriber<CustomErrorDescriber>()
+            .AddDefaultTokenProviders()
+            .AddTokenProvider<DataProtectorTokenProvider<Models.AppUser>>(TokenOptions.DefaultProvider);
+
+            // Token ya?am müdd?tini t?yin et
+            builder.Services.Configure<DataProtectionTokenProviderOptions>(opt =>
+                opt.TokenLifespan = TimeSpan.FromHours(1)); // 1 saat
 
             var app = builder.Build();
 

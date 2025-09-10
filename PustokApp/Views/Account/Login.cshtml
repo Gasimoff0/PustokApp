@@ -30,6 +30,11 @@
 							</div>
 							<span asp-validation-for="RememberMe" class="text-danger"></span>
 						</div>
+						<div class="col-md-12 mb--15 text-right">
+							<a asp-action="ForgotPassword" class="forgot-password-link">
+								<i class="fas fa-key"></i> Şifrəni unutdum?
+							</a>
+						</div>
 						<div class="col-md-12">
 							<button type="submit" class="btn btn-outlined">Login</button>
 						</div>
@@ -111,6 +116,22 @@
 
 	.custom-checkbox-input:focus ~ .custom-checkbox-checkmark {
 		box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+	}
+
+	.forgot-password-link {
+		color: #dc3545;
+		text-decoration: none;
+		font-size: 14px;
+		transition: color 0.3s ease;
+	}
+
+	.forgot-password-link:hover {
+		color: #c82333;
+		text-decoration: underline;
+	}
+
+	.forgot-password-link i {
+		margin-right: 5px;
 	}
 </style>
 
